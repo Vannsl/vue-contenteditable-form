@@ -2,6 +2,10 @@
 
 A Notion-like Form written in Vue 3, Vite, and TailwindCSS
 
+## Demo
+
+[Live Demo](https://vue-contenteditable-form.vercel.app/)
+
 ## Installation
 
 Use the package manager [npm](https://www.npmjs.com/) to install Vue Contenteditable Form.
