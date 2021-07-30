@@ -25,7 +25,7 @@ export function useBlocks() {
   }
 
   function addBlockAfter(index) {
-    blocks.value.splice(index, 0, createInitialBlock())
+    blocks.value.splice(index + 1, 0, createInitialBlock())
   }
 
   function saveBlocks() {
