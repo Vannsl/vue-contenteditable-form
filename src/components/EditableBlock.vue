@@ -12,7 +12,7 @@
       default: '',
     },
   })
-  const emit = defineEmit(['change-content'])
+  const emit = defineEmit(['change-content', 'enter-pressed'])
 
   const content = ref(props.html)
 
@@ -24,6 +24,10 @@
       emit('change-content', content.value)
     }
   )
+
+  function enterPressed() {
+    emit('enter-pressed')
+  }
 </script>
 
 <template>
@@ -33,5 +37,18 @@
     :contenteditable="isEditable"
     :no-n-l="true"
     :no-h-t-m-l="true"
+    placeholder="Type to add a block"
+    @returned="enterPressed"
   />
 </template>
+
+<style scoped>
+  [placeholder]:empty::before {
+    @apply text-gray-400;
+    content: attr(placeholder);
+  }
+
+  [placeholder]:empty:focus::before {
+    content: '';
+  }
+</style>

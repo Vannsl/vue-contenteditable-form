@@ -8,7 +8,7 @@ import {
 
 const BLOCKS = 'blocks'
 
-const createInitialBlock = () => ({ id: v4(), html: 'Hello', tag: 'p' })
+const createInitialBlock = () => ({ id: v4(), html: '', tag: 'p' })
 
 const blocks = ref([])
 
@@ -24,8 +24,8 @@ export function useBlocks() {
     block.html = html
   }
 
-  function addBlock() {
-    blocks.value.push(createInitialBlock())
+  function addBlockAfter(index) {
+    blocks.value.splice(index + 1, 0, createInitialBlock())
   }
 
   function saveBlocks() {
@@ -39,7 +39,7 @@ export function useBlocks() {
 
   return {
     blocks: readonly(blocks),
-    addBlock,
+    addBlockAfter,
     updateBlock,
     saveBlocks,
     resetBlocks,
