@@ -7,7 +7,7 @@ import {
 } from '../utils/localStorage'
 
 const BLOCKS = 'blocks'
-const TITLE = 'test'
+const TITLE = 'title'
 
 const createInitialBlock = () => ({ id: v4(), html: '', tag: 'p' })
 const title = ref('')
