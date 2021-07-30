@@ -11,6 +11,10 @@
       type: String,
       default: '',
     },
+    placeholder: {
+      type: String,
+      default: '',
+    },
   })
   const emit = defineEmit(['change-content', 'enter-pressed'])
 
@@ -31,15 +35,18 @@
 </script>
 
 <template>
-  <contenteditable
-    v-model="content"
-    :tag="tag"
-    :contenteditable="isEditable"
-    :no-n-l="true"
-    :no-h-t-m-l="true"
-    placeholder="Type to add a block"
-    @returned="enterPressed"
-  />
+  <div class="v-block">
+    <contenteditable
+      v-model="content"
+      :tag="tag"
+      :contenteditable="isEditable"
+      :no-n-l="true"
+      :no-h-t-m-l="true"
+      :placeholder="placeholder"
+      class="px-2 py-1 focus:outline-none focus:bg-gray-100"
+      @returned="enterPressed"
+    />
+  </div>
 </template>
 
 <style scoped>
@@ -50,5 +57,9 @@
 
   [placeholder]:empty:focus::before {
     content: '';
+  }
+
+  .v-block::v-deep h1 {
+    @apply font-bold text-2xl;
   }
 </style>

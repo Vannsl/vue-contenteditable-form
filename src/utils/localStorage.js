@@ -32,7 +32,7 @@ export function localStorageGet(key) {
 export function localStorageSave(key, value) {
   if (value === undefined) alert("Can't store undefinded value")
 
-  if (typeof value === 'object' || value instanceof 'array') {
+  if (typeof value === 'object' || Array.isArray(value)) {
     value = JSON.stringify(value)
   }
 

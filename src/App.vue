@@ -3,10 +3,10 @@
     <div class="container mx-auto flex justify-between items-center">
       <h1 class="text-3xl font-bold">Vannsl's Notion like Form</h1>
       <div>
-        <BaseButton color="primaryUnfilled" class="mr-2" @clicked="resetBlocks">
+        <BaseButton color="primaryUnfilled" class="mr-2" @clicked="reset">
           Reset
         </BaseButton>
-        <BaseButton @clicked="saveBlocks">Save</BaseButton>
+        <BaseButton @clicked="save">Save</BaseButton>
       </div>
     </div>
   </header>
@@ -22,7 +22,7 @@
   import EditableForm from './components/EditableForm.vue'
   import { useBlocks } from './composables/useBlocks'
 
-  const { saveBlocks, resetBlocks } = useBlocks()
+  const { save, reset } = useBlocks()
 </script>
 
 <style>

@@ -1,6 +1,7 @@
 <script setup>
   import { ref } from 'vue'
   import Draggable from 'vuedraggable'
+  import BaseSpacer from './BaseSpacer.vue'
   import EditableBlock from './EditableBlock.vue'
   import { useBlocks } from '../composables/useBlocks.js'
 
@@ -12,7 +13,7 @@
     ghostClass: 'ghost',
   }
 
-  const { blocks, updateBlock, addBlockAfter } = useBlocks()
+  const { title, blocks, updateBlock, updateTitle, addBlockAfter } = useBlocks()
 
   function addAndFocusOnBlock(index) {
     addBlockAfter(index)
@@ -21,6 +22,14 @@
 </script>
 
 <template>
+  <EditableBlock
+    tag="h1"
+    :html="title"
+    class="w-full px-2 py-1 focus:outline-none focus:bg-gray-100"
+    placeholder="Page Title"
+    @changeContent="updateTitle"
+  />
+  <BaseSpacer />
   <Draggable
     v-model="blocks"
     tag="transition-group"
@@ -60,7 +69,8 @@
         <EditableBlock
           :tag="element.tag"
           :html="element.html"
-          class="w-full px-2 py-1 focus:outline-none focus:bg-gray-100"
+          placeholder="Type to add block"
+          class="w-full"
           @changeContent="(html) => updateBlock(element.id, html)"
           @enterPressed="addAndFocusOnBlock(index)"
         />
