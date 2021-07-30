@@ -1,6 +1,6 @@
 # Vue Contenteditable Form
 
-A Notion-like Form written in Vue 3, Vite, and TailwindCSS
+Prototype: A Notion-like Form written in Vue 3, Vite, and TailwindCSS
 
 ## Demo
 
@@ -51,6 +51,20 @@ npm run serve
 # or
 yarn serve
 ```
+
+## Project Roadmap
+
+This project is currently in a prototype state.
+You can check out the [project board](https://github.com/Vannsl/vue-contenteditable-form/projects/1) on GitHub.
+
+Currently implemented and planned features are:
+
+- [x] Add end edit contenteditable blocks
+- [x] Store to LocalStorage
+- [x] Add Button for new blocks
+- [ ] Make block tags changeable with rich text buttons
+- [ ] Add images
+- [ ] Resize images
 
 ## Contributing
 
