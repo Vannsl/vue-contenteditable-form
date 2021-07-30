@@ -1,16 +1,7 @@
 <template>
   <button
     :class="dynamicClasses"
-    class="
-      text-indigo-100
-      transition-colors
-      duration-150
-      bg-indigo-700
-      rounded-lg
-      focus:shadow-outline
-      hover:bg-indigo-800
-      font-bold
-    "
+    class="transition-colors duration-150 rounded-md focus:shadow-outline"
     @click="emit('clicked')"
   >
     <slot />
@@ -21,17 +12,34 @@
   import { computed, defineProps, defineEmit } from 'vue'
 
   const props = defineProps({
+    color: {
+      type: String,
+      default: 'primary',
+      validator(val) {
+        return ['primary', 'primaryUnfilled'].includes(val)
+      },
+    },
     size: {
       type: String,
       default: 'sm',
+      validator(val) {
+        return ['sm', 'md'].includes(val)
+      },
     },
   })
   const emit = defineEmit(['clicked'])
 
   const sizeClasses = {
-    sm: 'h-8 px-4 text-sm',
-    md: 'h-10 px-5',
+    sm: 'text-sm py-2.5 px-5',
+    md: 'text-md py-3 px-6',
   }
 
-  const dynamicClasses = computed(() => sizeClasses[props.size])
+  const colorClasses = {
+    primary: 'bg-blue-500 text-white hover:bg-blue-600',
+    primaryUnfilled: 'border border-blue-600 text-blue-600 hover:bg-blue-50',
+  }
+
+  const dynamicClasses = computed(
+    () => `${sizeClasses[props.size]} ${colorClasses[props.color]}`
+  )
 </script>

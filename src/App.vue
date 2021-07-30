@@ -2,7 +2,17 @@
   <header class="py-4 border-b">
     <div class="container mx-auto flex justify-between items-center">
       <h1 class="text-3xl font-bold">Vannsl's Notion like Form</h1>
-      <BaseButton size="md" @clicked="saveBlocks">Save</BaseButton>
+      <div>
+        <BaseButton
+          color="primaryUnfilled"
+          size="md"
+          class="mr-2"
+          @clicked="resetBlocks"
+        >
+          Reset
+        </BaseButton>
+        <BaseButton size="md" @clicked="saveBlocks">Save</BaseButton>
+      </div>
     </div>
   </header>
   <BaseSpacer />
@@ -17,7 +27,7 @@
   import EditableForm from './components/EditableForm.vue'
   import { useBlocks } from './composables/useBlocks'
 
-  const { saveBlocks } = useBlocks()
+  const { saveBlocks, resetBlocks } = useBlocks()
 </script>
 
 <style>

@@ -8,14 +8,14 @@ import {
 
 const BLOCKS = 'blocks'
 
-const initialBlock = { id: v4(), html: 'Hello', tag: 'p' }
+const createInitialBlock = () => ({ id: v4(), html: 'Hello', tag: 'p' })
 
 const blocks = ref([])
 
 if (localStorageHas(BLOCKS)) {
   blocks.value = localStorageGet(BLOCKS)
 } else {
-  blocks.value = [initialBlock]
+  blocks.value = [createInitialBlock()]
 }
 
 export function useBlocks() {
@@ -25,11 +25,16 @@ export function useBlocks() {
   }
 
   function addBlock() {
-    blocks.value.push(initialBlock)
+    blocks.value.push(createInitialBlock())
   }
 
   function saveBlocks() {
     localStorageSave(BLOCKS, blocks.value)
+  }
+
+  function resetBlocks() {
+    blocks.value = [createInitialBlock()]
+    saveBlocks()
   }
 
   return {
@@ -37,5 +42,6 @@ export function useBlocks() {
     addBlock,
     updateBlock,
     saveBlocks,
+    resetBlocks,
   }
 }
