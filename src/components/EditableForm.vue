@@ -16,8 +16,13 @@
   const { title, blocks, updateBlock, updateTitle, addBlockAfter } = useBlocks()
 
   function addAndFocusOnBlock(index) {
-    addBlockAfter(index)
-    // TODO: focuss
+    const newBlock = addBlockAfter(index)
+    setTimeout(() => {
+      const el = document.getElementById(newBlock.id)
+      if (el) {
+        el.focus()
+      }
+    }, 0)
   }
 </script>
 
@@ -67,6 +72,7 @@
           </svg>
         </div>
         <EditableBlock
+          :id="element.id"
           :tag="element.tag"
           :html="element.html"
           placeholder="Type to add block"
