@@ -1,5 +1,5 @@
 <script setup>
-  import { ref } from 'vue'
+  import { nextTick, ref } from 'vue'
   import Draggable from 'vuedraggable'
   import BaseSpacer from './BaseSpacer.vue'
   import EditableBlock from './EditableBlock.vue'
@@ -16,8 +16,13 @@
   const { title, blocks, updateBlock, updateTitle, addBlockAfter } = useBlocks()
 
   function addAndFocusOnBlock(index) {
-    addBlockAfter(index)
-    // TODO: focuss
+    const newBlock = addBlockAfter(index)
+    nextTick(() => {
+      const el = document.getElementById(newBlock.id)
+      if (el) {
+        el.focus()
+      }
+    })
   }
 </script>
 
@@ -67,6 +72,7 @@
           </svg>
         </div>
         <EditableBlock
+          :id="element.id"
           :tag="element.tag"
           :html="element.html"
           placeholder="Type to add block"

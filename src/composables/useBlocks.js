@@ -35,7 +35,9 @@ export function useBlocks() {
   }
 
   function addBlockAfter(index) {
-    blocks.value.splice(index + 1, 0, createInitialBlock())
+    const newBlock = createInitialBlock()
+    blocks.value.splice(index + 1, 0, newBlock)
+    return newBlock
   }
 
   function saveTitle() {

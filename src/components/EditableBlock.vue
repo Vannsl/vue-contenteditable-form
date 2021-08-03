@@ -16,6 +16,10 @@
       type: String,
       default: '',
     },
+    id: {
+      type: String,
+      default: '',
+    }
   })
 
   const emit = defineEmit(['change-content', 'enter-pressed'])
@@ -96,6 +100,7 @@
       </BaseButton>
     </div>
     <contenteditable
+      :id="id"
       v-model="content"
       :tag="tag"
       :contenteditable="isEditable"
