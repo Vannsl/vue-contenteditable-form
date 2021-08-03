@@ -69,7 +69,7 @@ export function useBlocks() {
   }
 
   return {
-    blocks: readonly(blocks),
+    blocks,
     title: readonly(title),
     addBlockAfter,
     updateTitle,
