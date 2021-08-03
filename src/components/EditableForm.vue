@@ -1,5 +1,5 @@
 <script setup>
-  import { ref } from 'vue'
+  import { nextTick, ref } from 'vue'
   import Draggable from 'vuedraggable'
   import BaseSpacer from './BaseSpacer.vue'
   import EditableBlock from './EditableBlock.vue'
@@ -17,12 +17,12 @@
 
   function addAndFocusOnBlock(index) {
     const newBlock = addBlockAfter(index)
-    setTimeout(() => {
+    nextTick(() => {
       const el = document.getElementById(newBlock.id)
       if (el) {
         el.focus()
       }
-    }, 0)
+    })
   }
 </script>
 
