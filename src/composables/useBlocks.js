@@ -40,6 +40,10 @@ export function useBlocks() {
     return newBlock
   }
 
+  function deleteBlock(id) {
+    blocks.value = blocks.value.filter((block) => block.id !== id)
+  }
+
   function saveTitle() {
     localStorageSave(TITLE, title.value)
   }
@@ -71,6 +75,7 @@ export function useBlocks() {
   return {
     blocks,
     title: readonly(title),
+    deleteBlock,
     addBlockAfter,
     updateTitle,
     updateBlock,
