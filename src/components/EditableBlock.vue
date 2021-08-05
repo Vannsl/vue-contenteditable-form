@@ -19,7 +19,7 @@
     id: {
       type: String,
       default: '',
-    }
+    },
   })
 
   const emit = defineEmit(['change-content', 'enter-pressed'])
@@ -71,6 +71,7 @@
       v-show="isHighlighted"
       ref="toolbar"
       class="
+        font-mono font-bold
         absolute
         flex
         border border-gray-200
@@ -84,16 +85,18 @@
       <BaseButton
         size="square"
         color="primaryFlat"
+        title="Bold"
         @clicked="surroundWith('strong')"
       >
-        Bold
+        B
       </BaseButton>
       <BaseButton
         size="square"
         color="primaryFlat"
+        title="Italic"
         @clicked="surroundWith('em')"
       >
-        Italic
+        I
       </BaseButton>
       <BaseButton size="square" color="primaryFlat" @clicked="closeToolbar">
         &times;
