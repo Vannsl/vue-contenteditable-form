@@ -1,7 +1,17 @@
+<script>
+  import clickOutside from '../directives/clickOutside'
+
+  export default {
+    directives: {
+      clickOutside,
+    },
+  }
+</script>
+
 <script setup>
   import { defineProps, defineEmit, ref, watch } from 'vue'
   import contenteditable from 'vue-contenteditable'
-  import BaseButton from './BaseButton.vue'
+  import TextToolbar from './TextToolbar.vue'
 
   const props = defineProps({
     tag: {
@@ -20,6 +30,10 @@
       type: String,
       default: '',
     },
+    hasToolbar: {
+      type: Boolean,
+      default: true,
+    },
   })
 
   const emit = defineEmit(['change-content', 'enter-pressed'])
@@ -30,18 +44,26 @@
   const isEditable = ref(true)
   const isHighlighted = ref(false)
   const selection = ref(null)
+  const wasMouseUpEvent = ref(false)
 
   function mouseUp() {
-    selection.value = document.getSelection()
+    if (!props.hasToolbar) return
     isHighlighted.value = false
+
+    selection.value = document.getSelection()
     if (!selection.value.toString().trim().length) return
+
+    wasMouseUpEvent.value = true
     const rect = selection.value.getRangeAt(0).getBoundingClientRect()
     isHighlighted.value = true
-    toolbar.value.style.left = `${rect.x - 30}px`
-    toolbar.value.style.top = `${rect.y - 40}px`
+    toolbar.value.style.left = `${rect.x}px`
+    toolbar.value.style.top = `${rect.y - 44}px`
   }
 
   function closeToolbar() {
+    if (wasMouseUpEvent.value) return
+
+    wasMouseUpEvent.value = false
     isHighlighted.value = false
   }
 
@@ -70,37 +92,13 @@
     <div
       v-show="isHighlighted"
       ref="toolbar"
-      class="
-        font-mono font-bold
-        absolute
-        flex
-        border border-gray-200
-        shadow-md
-        rounded
-        pl-2
-        py-1
-        bg-white
-      "
+      v-click-outside="closeToolbar"
+      class="absolute"
     >
-      <BaseButton
-        size="square"
-        color="primaryFlat"
-        title="Bold"
-        @clicked="surroundWith('strong')"
-      >
-        B
-      </BaseButton>
-      <BaseButton
-        size="square"
-        color="primaryFlat"
-        title="Italic"
-        @clicked="surroundWith('em')"
-      >
-        I
-      </BaseButton>
-      <BaseButton size="square" color="primaryFlat" @clicked="closeToolbar">
-        &times;
-      </BaseButton>
+      <TextToolbar
+        @clicked-bold="surroundWith('strong')"
+        @clicked-italic="surroundWith('em')"
+      />
     </div>
     <contenteditable
       :id="id"
