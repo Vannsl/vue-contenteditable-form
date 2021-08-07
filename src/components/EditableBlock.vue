@@ -1,3 +1,13 @@
+<script>
+  import clickOutside from '../directives/clickOutside'
+
+  export default {
+    directives: {
+      clickOutside,
+    },
+  }
+</script>
+
 <script setup>
   import { defineProps, defineEmit, ref, watch } from 'vue'
   import contenteditable from 'vue-contenteditable'
@@ -34,14 +44,16 @@
   const isEditable = ref(true)
   const isHighlighted = ref(false)
   const selection = ref(null)
+  const wasMouseUpEvent = ref(false)
 
   function mouseUp() {
     if (!props.hasToolbar) return
+    isHighlighted.value = false
 
     selection.value = document.getSelection()
-    isHighlighted.value = false
     if (!selection.value.toString().trim().length) return
 
+    wasMouseUpEvent.value = true
     const rect = selection.value.getRangeAt(0).getBoundingClientRect()
     isHighlighted.value = true
     toolbar.value.style.left = `${rect.x}px`
@@ -49,6 +61,9 @@
   }
 
   function closeToolbar() {
+    if (wasMouseUpEvent.value) return
+
+    wasMouseUpEvent.value = false
     isHighlighted.value = false
   }
 
@@ -74,11 +89,15 @@
 
 <template>
   <div>
-    <div v-show="isHighlighted" ref="toolbar" class="absolute">
+    <div
+      v-show="isHighlighted"
+      ref="toolbar"
+      v-click-outside="closeToolbar"
+      class="absolute"
+    >
       <TextToolbar
         @clicked-bold="surroundWith('strong')"
         @clicked-italic="surroundWith('em')"
-        @clicked-close="closeToolbar"
       />
     </div>
     <contenteditable

@@ -2,7 +2,7 @@
   import { defineEmit } from 'vue'
   import BaseButton from './BaseButton.vue'
 
-  const emit = defineEmit(['clicked-bold', 'clicked-italic', 'clicked-close'])
+  const emit = defineEmit(['clicked-bold', 'clicked-italic'])
 </script>
 
 <template>
@@ -33,13 +33,6 @@
       @clicked="emit('clicked-italic')"
     >
       I
-    </BaseButton>
-    <BaseButton
-      size="square"
-      color="primaryFlat"
-      @clicked="emit('clicked-close')"
-    >
-      &times;
     </BaseButton>
   </div>
 </template>
