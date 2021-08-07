@@ -37,6 +37,7 @@
   <EditableBlock
     tag="h1"
     :html="title"
+    :has-toolbar="false"
     class="w-full ml-10 px-2 py-1 focus:outline-none focus:bg-gray-100"
     placeholder="Page Title"
     @changeContent="updateTitle"
