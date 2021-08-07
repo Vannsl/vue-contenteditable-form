@@ -13,7 +13,14 @@
     ghostClass: 'ghost',
   }
 
-  const { title, blocks, updateBlock, updateTitle, addBlockAfter } = useBlocks()
+  const {
+    title,
+    blocks,
+    updateBlock,
+    updateTitle,
+    addBlockAfter,
+    deleteBlock,
+  } = useBlocks()
 
   function addAndFocusOnBlock(index) {
     const newBlock = addBlockAfter(index)
@@ -30,7 +37,7 @@
   <EditableBlock
     tag="h1"
     :html="title"
-    class="w-full px-2 py-1 focus:outline-none focus:bg-gray-100"
+    class="w-full ml-10 px-2 py-1 focus:outline-none focus:bg-gray-100"
     placeholder="Page Title"
     @changeContent="updateTitle"
   />
@@ -51,25 +58,52 @@
   >
     <template #item="{ element, index }">
       <div
-        class="flex flex-grow items-center w-full"
+        class="flex flex-grow items-center w-full group"
         role="button"
         tabindex="0"
       >
-        <div data-action="handle" class="cursor-move text-gray-400">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="{2}"
-              d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
-            />
-          </svg>
+        <div
+          class="
+            flex
+            text-gray-400
+            opacity-0
+            group-hover:opacity-100
+            group-focus:opacity-100
+            focus-within:opacity-100
+          "
+        >
+          <button @click="deleteBlock(element.id)">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="{2}"
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+              />
+            </svg>
+          </button>
+          <div data-action="handle" class="cursor-move">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="{2}"
+                d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+              />
+            </svg>
+          </div>
         </div>
         <EditableBlock
           :id="element.id"
