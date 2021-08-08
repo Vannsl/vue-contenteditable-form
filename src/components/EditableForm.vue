@@ -53,6 +53,18 @@
     }
     input.click()
   }
+
+  function setFocusOn(index) {
+    if (index === -1) return
+    if (index === blocks.value.length) {
+      addAndFocusOnBlock(index - 1)
+      return
+    }
+    const domElement = document.getElementById(blocks.value[index].id)
+    if (domElement) {
+      domElement.focus()
+    }
+  }
 </script>
 
 <template>
@@ -105,17 +117,21 @@
             <IconDrag />
           </div>
         </div>
-        <ImageBlock v-if="element.tag === 'img'"
+        <ImageBlock
+          v-if="element.tag === 'img'"
           :id="element.id"
           :content="element.content"
           :text="element.text"
         />
-        <EditableBlock v-else
+        <EditableBlock
+          v-else
           :id="element.id"
           :tag="element.tag"
           :html="element.html"
           placeholder="Type to add block"
           class="w-full"
+          @arrowUp="setFocusOn(index - 1)"
+          @arrowDown="setFocusOn(index + 1)"
           @changeContent="(html) => updateBlock(element.id, html)"
           @enterPressed="addAndFocusOnBlock(index)"
         />
