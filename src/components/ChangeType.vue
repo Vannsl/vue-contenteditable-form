@@ -1,3 +1,10 @@
+<script setup>
+  import { defineEmits } from 'vue'
+  import BaseButton from './BaseButton.vue'
+
+  const emit = defineEmits(['clicked-title', 'clicked-paragraph'])
+</script>
+
 <template>
   <div
     class="
@@ -32,13 +39,6 @@
     </BaseButton>
   </div>
 </template>
-
-<script setup>
-  import { defineEmits } from 'vue'
-  import BaseButton from './BaseButton.vue'
-
-  const emit = defineEmits(['clicked-title', 'clicked-paragraph'])
-</script>
 
 <style scoped>
   .popup {

@@ -124,7 +124,7 @@
       v-if="showChangeType"
       @clicked-title="changeBlockTag('h2')"
       @clicked-paragraph="changeBlockTag('p')"
-    ></ChangeType>
+    />
     <contenteditable
       :id="id"
       v-model="content"
