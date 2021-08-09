@@ -1,5 +1,6 @@
 <script>
   import clickOutside from '../directives/clickOutside'
+  import ChangeType from './ChangeType.vue'
 
   export default {
     directives: {
@@ -9,9 +10,12 @@
 </script>
 
 <script setup>
-  import { defineProps, defineEmit, ref, watch } from 'vue'
+  import { defineProps, nextTick, defineEmits, ref, watch, computed } from 'vue'
   import contenteditable from 'vue-contenteditable'
   import TextToolbar from './TextToolbar.vue'
+  import { useBlocks } from '../composables/useBlocks.js'
+
+  const { updateTag } = useBlocks()
 
   const props = defineProps({
     tag: {
@@ -36,7 +40,7 @@
     },
   })
 
-  const emit = defineEmit(['change-content', 'enter-pressed'])
+  const emit = defineEmits(['change-content', 'enter-pressed'])
 
   const content = ref(props.html)
 
@@ -74,6 +78,10 @@
     }
   )
 
+  const showChangeType = computed(
+    () => props.tag !== 'h1' && content.value === '/'
+  )
+
   function surroundWith(element) {
     const strong = document.createElement(element)
     const range = selection.value.getRangeAt(0).cloneRange()
@@ -84,6 +92,18 @@
 
   function enterPressed() {
     emit('enter-pressed')
+  }
+
+  function changeBlockTag(tag) {
+    const id = props.id
+    content.value = ''
+    updateTag(id, tag)
+    nextTick(() => {
+      const el = document.getElementById(id)
+      if (el) {
+        el.focus()
+      }
+    })
   }
 </script>
 
@@ -100,6 +120,11 @@
         @clicked-italic="surroundWith('em')"
       />
     </div>
+    <ChangeType
+      v-if="showChangeType"
+      @clicked-title="changeBlockTag('h2')"
+      @clicked-paragraph="changeBlockTag('p')"
+    />
     <contenteditable
       :id="id"
       v-model="content"
@@ -127,5 +152,9 @@
 
   :deep(h1) {
     @apply font-bold text-2xl;
+  }
+
+  :deep(h2) {
+    @apply font-bold text-lg;
   }
 </style>

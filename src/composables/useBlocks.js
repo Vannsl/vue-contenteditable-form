@@ -30,6 +30,14 @@ export function useBlocks() {
     block.html = html
   }
 
+  function updateTag(id, tag) {
+    const block = blocks.value.find((block) => block.id === id)
+    if (!block) {
+      throw Error(`Block ${id} not found`)
+    }
+    block.tag = tag
+  }
+
   function updateTitle(html) {
     title.value = html
   }
@@ -77,6 +85,7 @@ export function useBlocks() {
     title: readonly(title),
     deleteBlock,
     addBlockAfter,
+    updateTag,
     updateTitle,
     updateBlock,
     save,
