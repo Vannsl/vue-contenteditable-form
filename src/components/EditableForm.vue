@@ -4,7 +4,9 @@
   import BaseSpacer from './BaseSpacer.vue'
   import IconBin from './IconBin.vue'
   import IconDrag from './IconDrag.vue'
+  import IconPlus from './IconPlus.vue'
   import EditableBlock from './EditableBlock.vue'
+  import ImageBlock from './ImageBlock.vue'
   import { useBlocks } from '../composables/useBlocks.js'
 
   const drag = ref(false)
@@ -21,6 +23,7 @@
     updateBlock,
     updateTitle,
     addBlockAfter,
+    addImageBlockAfter,
     deleteBlock,
   } = useBlocks()
 
@@ -32,6 +35,23 @@
         el.focus()
       }
     })
+  }
+
+  function addImageBlock(index) {
+    const input = document.createElement('input')
+    input.type = 'file'
+    input.accept = 'image/png, image/jpeg'
+    input.onchange = (e) => {
+      const file = e.target.files[0]
+      const text = file.name
+      const reader = new FileReader()
+      reader.onload = (readerEvent) => {
+        const content = readerEvent.target.result
+        addImageBlockAfter(index, content, text)
+      }
+      reader.readAsDataURL(file)
+    }
+    input.click()
   }
 </script>
 
@@ -70,19 +90,27 @@
             flex
             text-gray-400
             opacity-0
-            group-hover:opacity-100
-            group-focus:opacity-100
-            focus-within:opacity-100
+            group-hover:opacity-70
+            group-focus:opacity-70
+            focus-within:opacity-70
           "
         >
           <button @click="deleteBlock(element.id)">
             <IconBin />
           </button>
+          <button @click="addImageBlock(index)">
+            <IconPlus />
+          </button>
           <div data-action="handle" class="cursor-move">
             <IconDrag />
           </div>
         </div>
-        <EditableBlock
+        <ImageBlock v-if="element.tag === 'img'"
+          :id="element.id"
+          :content="element.content"
+          :text="element.text"
+        />
+        <EditableBlock v-else
           :id="element.id"
           :tag="element.tag"
           :html="element.html"

@@ -48,6 +48,12 @@ export function useBlocks() {
     return newBlock
   }
 
+  function addImageBlockAfter(index, content, text) {
+    const newBlock = { id: v4(), content: content, text, tag: 'img' }
+    blocks.value.splice(index + 1, 0, newBlock)
+    return newBlock
+  }
+
   function deleteBlock(id) {
     blocks.value = blocks.value.filter((block) => block.id !== id)
   }
@@ -85,6 +91,7 @@ export function useBlocks() {
     title: readonly(title),
     deleteBlock,
     addBlockAfter,
+    addImageBlockAfter,
     updateTag,
     updateTitle,
     updateBlock,
