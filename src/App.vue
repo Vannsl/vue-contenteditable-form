@@ -1,7 +1,7 @@
 <template>
   <header class="py-4 border-b">
     <div class="container mx-auto flex justify-between items-center">
-      <h1 class="text-3xl font-bold">Vannsl's Notion like Form</h1>
+      <h1 class="text-3xl font-bold">OSS Notion like Form</h1>
       <div>
         <BaseButton color="primaryUnfilled" class="mr-2" @clicked="reset">
           Reset
