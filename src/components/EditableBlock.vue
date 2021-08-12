@@ -40,7 +40,12 @@
     },
   })
 
-  const emit = defineEmits(['change-content', 'enter-pressed'])
+  const emit = defineEmits([
+    'change-content',
+    'enter-pressed',
+    'arrow-up',
+    'arrow-down',
+  ])
 
   const content = ref(props.html)
 
@@ -49,6 +54,19 @@
   const isHighlighted = ref(false)
   const selection = ref(null)
   const wasMouseUpEvent = ref(false)
+
+  function keyDown(event) {
+    const ARROW_UP = 38
+    const ARROW_DOWN = 40
+
+    if (event.keyCode === ARROW_UP) {
+      event.preventDefault()
+      emit('arrow-up')
+    } else if (content.value.trim() !== '' && event.keyCode === ARROW_DOWN) {
+      event.preventDefault()
+      emit('arrow-down')
+    }
+  }
 
   function mouseUp() {
     if (!props.hasToolbar) return
@@ -134,6 +152,7 @@
       :no-h-t-m-l="true"
       :placeholder="placeholder"
       class="px-2 py-1 focus:outline-none focus:bg-gray-100"
+      @keydown="keyDown"
       @mouseup="mouseUp"
       @returned="enterPressed"
     />
