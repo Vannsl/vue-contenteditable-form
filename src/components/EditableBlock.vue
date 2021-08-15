@@ -43,6 +43,7 @@
   const emit = defineEmits([
     'change-content',
     'enter-pressed',
+    'delete-block',
     'arrow-up',
     'arrow-down',
   ])
@@ -58,6 +59,7 @@
   function keyDown(event) {
     const ARROW_UP = 38
     const ARROW_DOWN = 40
+    const BACKSPACE = 8
 
     if (event.keyCode === ARROW_UP) {
       event.preventDefault()
@@ -65,6 +67,12 @@
     } else if (content.value.trim() !== '' && event.keyCode === ARROW_DOWN) {
       event.preventDefault()
       emit('arrow-down')
+    } else if (event.keyCode === BACKSPACE) {
+      const sel = window.getSelection()
+      if (sel && sel.anchorOffset === 0 && sel.focusOffset === 0) {
+        event.preventDefault()
+        emit('delete-block')
+      }
     }
   }
 
