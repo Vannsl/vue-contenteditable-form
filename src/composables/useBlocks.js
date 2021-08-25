@@ -48,6 +48,12 @@ export function useBlocks() {
     return newBlock
   }
 
+  function addCopyBlockAfter(index, block) {
+    const newBlock = { ...block, id: v4() }
+    blocks.value.splice(index + 1, 0, newBlock)
+    return newBlock
+  }
+
   function addImageBlockAfter(index, content, text) {
     const newBlock = { id: v4(), content: content, text, tag: 'img' }
     blocks.value.splice(index + 1, 0, newBlock)
@@ -91,6 +97,7 @@ export function useBlocks() {
     title: readonly(title),
     deleteBlock,
     addBlockAfter,
+    addCopyBlockAfter,
     addImageBlockAfter,
     updateTag,
     updateTitle,

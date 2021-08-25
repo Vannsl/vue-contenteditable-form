@@ -14,6 +14,8 @@
   import contenteditable from 'vue-contenteditable'
   import TextToolbar from './TextToolbar.vue'
   import { useBlocks } from '../composables/useBlocks.js'
+  import { KEYS, CODES } from '../utils/keys'
+  import { isSelectionEmpty } from '../utils/selection'
 
   const { updateTag } = useBlocks()
 
@@ -45,6 +47,8 @@
     'enter-pressed',
     'arrow-up',
     'arrow-down',
+    'copy',
+    'paste'
   ])
 
   const content = ref(props.html)
@@ -55,7 +59,7 @@
   const selection = ref(null)
   const wasMouseUpEvent = ref(false)
 
-  function keyDown(event) {
+  async function keyDown(event) {
     const ARROW_UP = 38
     const ARROW_DOWN = 40
 
@@ -65,6 +69,13 @@
     } else if (content.value.trim() !== '' && event.keyCode === ARROW_DOWN) {
       event.preventDefault()
       emit('arrow-down')
+    } else if (event[KEYS.CTRL_OR_CMD] && event.code === CODES.C) {
+      if (isSelectionEmpty()) {
+        emit('copy')
+      }
+    } else if (event[KEYS.CTRL_OR_CMD] && event.code === CODES.V) {
+      event.preventDefault()
+      emit('paste')
     }
   }
 

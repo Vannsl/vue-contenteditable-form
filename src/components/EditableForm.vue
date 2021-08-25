@@ -8,6 +8,7 @@
   import EditableBlock from './EditableBlock.vue'
   import ImageBlock from './ImageBlock.vue'
   import { useBlocks } from '../composables/useBlocks.js'
+  import { addBlockToClipboard, getClipboardText } from '../utils/clipboard'
 
   const drag = ref(false)
 
@@ -23,6 +24,7 @@
     updateBlock,
     updateTitle,
     addBlockAfter,
+    addCopyBlockAfter,
     addImageBlockAfter,
     deleteBlock,
   } = useBlocks()
@@ -52,6 +54,33 @@
       reader.readAsDataURL(file)
     }
     input.click()
+  }
+
+  async function copyToClipboard(index) {
+    const block = blocks.value[index]
+    if (block) {
+      addBlockToClipboard(block)
+    }
+  }
+
+  async function pasteFromToClipboard(index) {
+    const text = await getClipboardText()
+    if (text) {
+      try {
+        const block = JSON.parse(text)
+        if (block.tag) {
+          const newBlock = addCopyBlockAfter(index, block)
+          nextTick(() => {
+            const el = document.getElementById(newBlock.id)
+            if (el) {
+              el.focus()
+            }
+          })
+        }
+      } catch (err) {
+        console.error('want to paste simple text:', text)
+      }
+    }
   }
 
   function setFocusOn(index) {
@@ -134,6 +163,8 @@
           @arrowDown="setFocusOn(index + 1)"
           @changeContent="(html) => updateBlock(element.id, html)"
           @enterPressed="addAndFocusOnBlock(index)"
+          @copy="copyToClipboard(index)"
+          @paste="pasteFromToClipboard(index)"
         />
       </div>
     </template>
