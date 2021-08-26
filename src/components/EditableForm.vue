@@ -74,12 +74,7 @@
       const prevContent = prevBlock.html
       const prevId = prevBlock.id
       if (currentContent) {
-        // updateBlock with rerendering (true)
-
-        // unfortunately that rerendering makes trouble:
-        // 'Uncaught TypeError: Cannot read property 'innerText' of null'
-        // vue-contenteditable npm package
-        updateBlock(prevBlock.id, prevContent + currentContent, true)
+        updateBlock(prevBlock.id, prevContent + currentContent)
       }
       deleteBlock(id)
       focusBlock(prevId, prevContent.length)
