@@ -10,7 +10,15 @@
 </script>
 
 <script setup>
-  import { defineProps, nextTick, defineEmits, ref, watch, computed } from 'vue'
+  import {
+    defineProps,
+    nextTick,
+    defineEmits,
+    ref,
+    toRef,
+    watch,
+    computed,
+  } from 'vue'
   import contenteditable from 'vue-contenteditable'
   import TextToolbar from './TextToolbar.vue'
   import { useBlocks } from '../composables/useBlocks.js'
@@ -48,7 +56,8 @@
     'arrow-down',
   ])
 
-  const content = ref(props.html)
+  const html = toRef(props, 'html')
+  const content = ref('')
 
   const toolbar = ref(null)
   const isEditable = ref(true)
@@ -102,6 +111,13 @@
     () => {
       emit('change-content', content.value)
     }
+  )
+  watch(
+    html,
+    (x) => {
+      content.value = x
+    },
+    { immediate: true }
   )
 
   const showChangeType = computed(

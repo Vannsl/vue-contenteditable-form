@@ -9,7 +9,7 @@ import {
 const BLOCKS = 'blocks'
 const TITLE = 'title'
 
-const createInitialBlock = () => ({ id: v4(), html: '', tag: 'p', version: 1 })
+const createInitialBlock = () => ({ id: v4(), html: '', tag: 'p' })
 const title = ref('')
 
 const blocks = ref([])
@@ -25,12 +25,9 @@ if (localStorageHas(TITLE)) {
 }
 
 export function useBlocks() {
-  function updateBlock(id, html, rerender = false) {
+  function updateBlock(id, html) {
     const block = blocks.value.find((block) => block.id === id)
     block.html = html
-    if (rerender) {
-      block.version++
-    }
   }
 
   function updateTag(id, tag) {
