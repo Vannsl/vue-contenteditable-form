@@ -10,7 +10,15 @@
 </script>
 
 <script setup>
-  import { defineProps, nextTick, defineEmits, ref, watch, computed } from 'vue'
+  import {
+    defineProps,
+    nextTick,
+    defineEmits,
+    ref,
+    toRef,
+    watch,
+    computed,
+  } from 'vue'
   import contenteditable from 'vue-contenteditable'
   import TextToolbar from './TextToolbar.vue'
   import { useBlocks } from '../composables/useBlocks.js'
@@ -43,11 +51,13 @@
   const emit = defineEmits([
     'change-content',
     'enter-pressed',
+    'delete-block',
     'arrow-up',
     'arrow-down',
   ])
 
-  const content = ref(props.html)
+  const html = toRef(props, 'html')
+  const content = ref('')
 
   const toolbar = ref(null)
   const isEditable = ref(true)
@@ -58,6 +68,7 @@
   function keyDown(event) {
     const ARROW_UP = 38
     const ARROW_DOWN = 40
+    const BACKSPACE = 8
 
     if (event.keyCode === ARROW_UP) {
       event.preventDefault()
@@ -65,6 +76,12 @@
     } else if (content.value.trim() !== '' && event.keyCode === ARROW_DOWN) {
       event.preventDefault()
       emit('arrow-down')
+    } else if (event.keyCode === BACKSPACE) {
+      const sel = window.getSelection()
+      if (sel && sel.anchorOffset === 0 && sel.focusOffset === 0) {
+        event.preventDefault()
+        emit('delete-block')
+      }
     }
   }
 
@@ -94,6 +111,13 @@
     () => {
       emit('change-content', content.value)
     }
+  )
+  watch(
+    html,
+    (x) => {
+      content.value = x
+    },
+    { immediate: true }
   )
 
   const showChangeType = computed(
