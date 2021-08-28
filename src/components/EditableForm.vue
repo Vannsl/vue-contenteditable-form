@@ -169,6 +169,7 @@
           :key="element.version"
           :tag="element.tag"
           :html="element.html"
+          :is-last-block="index === blocks.length - 1"
           placeholder="Type to add block"
           class="w-full"
           @arrowUp="setFocusOn(index - 1)"

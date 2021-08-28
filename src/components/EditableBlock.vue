@@ -46,6 +46,10 @@
       type: Boolean,
       default: true,
     },
+    isLastBlock: {
+      type: Boolean,
+      default: false,
+    },
   })
 
   const emit = defineEmits([
@@ -72,7 +76,10 @@
     if (event.keyCode === ARROW_UP) {
       event.preventDefault()
       emit('arrow-up')
-    } else if (content.value.trim() !== '' && event.keyCode === ARROW_DOWN) {
+    } else if (
+      event.keyCode === ARROW_DOWN &&
+      !(props.isLastBlock && content.value.trim() === '')
+    ) {
       event.preventDefault()
       emit('arrow-down')
     } else if (event.keyCode === BACKSPACE) {
