@@ -60,7 +60,6 @@
   const content = ref('')
 
   const toolbar = ref(null)
-  const isEditable = ref(true)
   const isHighlighted = ref(false)
   const selection = ref(null)
   const wasMouseUpEvent = ref(false)
@@ -171,7 +170,6 @@
       :id="id"
       v-model="content"
       :tag="tag"
-      :contenteditable="isEditable"
       :no-n-l="true"
       :no-h-t-m-l="true"
       :placeholder="placeholder"
