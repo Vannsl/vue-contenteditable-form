@@ -22,7 +22,6 @@
     const ARROW_UP = 38
     const ARROW_DOWN = 40
     const BACKSPACE = 8
-    let key = ''
 
     if (event.keyCode === ARROW_UP) {
       emit('arrow-up')

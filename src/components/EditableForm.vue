@@ -52,9 +52,9 @@
         const idxRight = Math.max(sel.anchorOffset, sel.focusOffset)
         const leftValue = value.substring(0, idxLeft).trim()
         const rightValue = value.substring(idxRight).trim()
-        currentBlock.html = leftValue
-        const newBlock = addBlockAfter(index)
-        newBlock.html = rightValue
+
+        updateBlock(currentBlock.id, leftValue)
+        const newBlock = addBlockAfter(index, rightValue)
 
         await focusBlock(newBlock.id)
       }
