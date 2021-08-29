@@ -32,6 +32,16 @@ yarn dev
 
 The script tells you on which port the website is available.
 
+## Testing
+
+The test files are in `src`, right next to the tested components. Spec files are named as the component with the suffix `spec`: `*.spec.js`.
+
+Run the following command to open the Component Test Runner:
+
+```bash
+npm run test
+```
+
 ## Deployment
 
 The main branch of this repository is automatically deployed on [Vercel](https://vercel.com/).
