@@ -27,9 +27,38 @@
     deleteBlock,
   } = useBlocks()
 
+  /*
+    split the current line at the caret position and creates a new block below
+
+          hello w|orld   
+
+          hello w
+          orld
+
+    on a range-selection (two caret position) split up in left and right part          
+
+          hello w|or|ld
+
+          hello w
+          ld
+  */
   async function addAndFocusOnBlock(index) {
-    const newBlock = addBlockAfter(index)
-    await focusBlock(newBlock.id)
+    const currentBlock = getBlockByIndex(index)
+    if (currentBlock) {
+      const sel = window.getSelection()
+      if (sel) {
+        const value = currentBlock.html
+        const idxLeft = Math.min(sel.anchorOffset, sel.focusOffset)
+        const idxRight = Math.max(sel.anchorOffset, sel.focusOffset)
+        const leftValue = value.substring(0, idxLeft).trim()
+        const rightValue = value.substring(idxRight).trim()
+        currentBlock.html = leftValue
+        const newBlock = addBlockAfter(index)
+        newBlock.html = rightValue
+
+        await focusBlock(newBlock.id)
+      }
+    }
   }
 
   function addImageBlock(index) {
