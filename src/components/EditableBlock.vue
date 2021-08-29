@@ -72,7 +72,7 @@
   const selection = ref(null)
   const wasMouseUpEvent = ref(false)
 
-  async function keyDown(event) {
+  function keyDown(event) {
     const ARROW_UP = 38
     const ARROW_DOWN = 40
     const BACKSPACE = 8
