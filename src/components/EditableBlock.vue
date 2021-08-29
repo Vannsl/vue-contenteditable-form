@@ -46,6 +46,10 @@
       type: Boolean,
       default: true,
     },
+    isLastBlock: {
+      type: Boolean,
+      default: false,
+    },
   })
 
   const emit = defineEmits([
@@ -60,7 +64,6 @@
   const content = ref('')
 
   const toolbar = ref(null)
-  const isEditable = ref(true)
   const isHighlighted = ref(false)
   const selection = ref(null)
   const wasMouseUpEvent = ref(false)
@@ -73,7 +76,10 @@
     if (event.keyCode === ARROW_UP) {
       event.preventDefault()
       emit('arrow-up')
-    } else if (content.value.trim() !== '' && event.keyCode === ARROW_DOWN) {
+    } else if (
+      event.keyCode === ARROW_DOWN &&
+      !(props.isLastBlock && content.value.trim() === '')
+    ) {
       event.preventDefault()
       emit('arrow-down')
     } else if (event.keyCode === BACKSPACE) {
@@ -171,7 +177,6 @@
       :id="id"
       v-model="content"
       :tag="tag"
-      :contenteditable="isEditable"
       :no-n-l="true"
       :no-h-t-m-l="true"
       :placeholder="placeholder"

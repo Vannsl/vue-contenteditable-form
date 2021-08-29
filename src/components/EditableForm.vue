@@ -162,6 +162,9 @@
           :id="element.id"
           :content="element.content"
           :text="element.text"
+          @arrowUp="setFocusOn(index - 1)"
+          @arrowDown="setFocusOn(index + 1)"
+          @deleteBlock="deleteAndFocusPreviousBlock(element.id, index)"
         />
         <EditableBlock
           v-else
@@ -169,6 +172,7 @@
           :key="element.version"
           :tag="element.tag"
           :html="element.html"
+          :is-last-block="index === blocks.length - 1"
           placeholder="Type to add block"
           class="w-full"
           @arrowUp="setFocusOn(index - 1)"
