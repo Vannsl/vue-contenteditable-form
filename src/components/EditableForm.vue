@@ -29,14 +29,9 @@
     deleteBlock,
   } = useBlocks()
 
-  function addAndFocusOnBlock(index) {
+  async function addAndFocusOnBlock(index) {
     const newBlock = addBlockAfter(index)
-    nextTick(() => {
-      const el = document.getElementById(newBlock.id)
-      if (el) {
-        el.focus()
-      }
-    })
+    await focusBlock(newBlock.id)
   }
 
   function addImageBlock(index) {
@@ -93,6 +88,51 @@
     if (domElement) {
       domElement.focus()
     }
+  }
+
+  /*
+     a, b, c    remove empty b        =>  a,   c
+     a, b, c    remove b with content =>  a+b, c
+  */
+  async function deleteAndFocusPreviousBlock(id, index) {
+    const prevBlock = getBlockByIndex(index - 1)
+    if (prevBlock) {
+      await focusBlock(prevBlock.id)
+      const currentBlock = getBlockByIndex(index)
+      const currentContent = currentBlock.html
+      const prevContent = prevBlock.html
+      const prevId = prevBlock.id
+      if (currentContent) {
+        updateBlock(prevBlock.id, prevContent + currentContent)
+      }
+      deleteBlock(id)
+      focusBlock(prevId, prevContent.length)
+    }
+  }
+
+  function getBlockByIndex(index) {
+    if (index < 0 || index >= blocks.value.length) {
+      return null
+    }
+    return blocks.value[index]
+  }
+
+  function setCaret(id, caretIndex) {
+    const el = document.getElementById(id)
+    const sel = window.getSelection()
+    sel.collapse(el.lastChild, caretIndex)
+  }
+
+  function focusBlock(id, pos = -1) {
+    return nextTick(() => {
+      const domElement = document.getElementById(id)
+      if (domElement) {
+        domElement.focus()
+        if (pos >= 0) {
+          setCaret(id, pos)
+        }
+      }
+    })
   }
 </script>
 
@@ -151,18 +191,24 @@
           :id="element.id"
           :content="element.content"
           :text="element.text"
+          @arrowUp="setFocusOn(index - 1)"
+          @arrowDown="setFocusOn(index + 1)"
+          @deleteBlock="deleteAndFocusPreviousBlock(element.id, index)"
         />
         <EditableBlock
           v-else
           :id="element.id"
+          :key="element.version"
           :tag="element.tag"
           :html="element.html"
+          :is-last-block="index === blocks.length - 1"
           placeholder="Type to add block"
           class="w-full"
           @arrowUp="setFocusOn(index - 1)"
           @arrowDown="setFocusOn(index + 1)"
           @changeContent="(html) => updateBlock(element.id, html)"
           @enterPressed="addAndFocusOnBlock(index)"
+          @deleteBlock="deleteAndFocusPreviousBlock(element.id, index)"
           @copy="copyToClipboard(index)"
           @paste="pasteFromToClipboard(index)"
         />

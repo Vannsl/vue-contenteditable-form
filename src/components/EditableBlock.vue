@@ -10,7 +10,15 @@
 </script>
 
 <script setup>
-  import { defineProps, nextTick, defineEmits, ref, watch, computed } from 'vue'
+  import {
+    defineProps,
+    nextTick,
+    defineEmits,
+    ref,
+    toRef,
+    watch,
+    computed,
+  } from 'vue'
   import contenteditable from 'vue-contenteditable'
   import TextToolbar from './TextToolbar.vue'
   import { useBlocks } from '../composables/useBlocks.js'
@@ -40,21 +48,26 @@
       type: Boolean,
       default: true,
     },
+    isLastBlock: {
+      type: Boolean,
+      default: false,
+    },
   })
 
   const emit = defineEmits([
     'change-content',
     'enter-pressed',
+    'delete-block',
     'arrow-up',
     'arrow-down',
     'copy',
-    'paste'
+    'paste',
   ])
 
-  const content = ref(props.html)
+  const html = toRef(props, 'html')
+  const content = ref('')
 
   const toolbar = ref(null)
-  const isEditable = ref(true)
   const isHighlighted = ref(false)
   const selection = ref(null)
   const wasMouseUpEvent = ref(false)
@@ -62,13 +75,23 @@
   async function keyDown(event) {
     const ARROW_UP = 38
     const ARROW_DOWN = 40
+    const BACKSPACE = 8
 
     if (event.keyCode === ARROW_UP) {
       event.preventDefault()
       emit('arrow-up')
-    } else if (content.value.trim() !== '' && event.keyCode === ARROW_DOWN) {
+    } else if (
+      event.keyCode === ARROW_DOWN &&
+      !(props.isLastBlock && content.value.trim() === '')
+    ) {
       event.preventDefault()
       emit('arrow-down')
+    } else if (event.keyCode === BACKSPACE) {
+      const sel = window.getSelection()
+      if (sel && sel.anchorOffset === 0 && sel.focusOffset === 0) {
+        event.preventDefault()
+        emit('delete-block')
+      }
     } else if (event[KEYS.CTRL_OR_CMD] && event.code === CODES.C) {
       if (isSelectionEmpty()) {
         emit('copy')
@@ -105,6 +128,13 @@
     () => {
       emit('change-content', content.value)
     }
+  )
+  watch(
+    html,
+    (x) => {
+      content.value = x
+    },
+    { immediate: true }
   )
 
   const showChangeType = computed(
@@ -158,7 +188,6 @@
       :id="id"
       v-model="content"
       :tag="tag"
-      :contenteditable="isEditable"
       :no-n-l="true"
       :no-h-t-m-l="true"
       :placeholder="placeholder"
