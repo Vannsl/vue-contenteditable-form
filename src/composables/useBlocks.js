@@ -42,8 +42,9 @@ export function useBlocks() {
     title.value = html
   }
 
-  function addBlockAfter(index) {
+  function addBlockAfter(index, html = '') {
     const newBlock = createInitialBlock()
+    newBlock.html = html
     blocks.value.splice(index + 1, 0, newBlock)
     return newBlock
   }
