@@ -8,7 +8,12 @@
   import EditableBlock from './EditableBlock.vue'
   import ImageBlock from './ImageBlock.vue'
   import { useBlocks } from '../composables/useBlocks.js'
-  import { addBlockToClipboard, getClipboardText } from '../utils/clipboard'
+  import {
+    clipboardGetBlock,
+    clipboardClear,
+    clipboardSetBlock,
+  } from '../utils/clipboard'
+  import { selectionIsEmpty } from '../utils/selection'
 
   const drag = ref(false)
 
@@ -80,30 +85,30 @@
     input.click()
   }
 
-  async function copyToClipboard(index) {
-    const block = blocks.value[index]
-    if (block) {
-      addBlockToClipboard(block)
+  function copyToClipboard(index) {
+    if (selectionIsEmpty()) {
+      const block = blocks.value[index]
+      if (block) {
+        clipboardSetBlock(block)
+      }
+    } else {
+      // no block in clipboard
+      clipboardClear()
     }
   }
 
-  async function pasteFromToClipboard(index) {
-    const text = await getClipboardText()
-    if (text) {
-      try {
-        const block = JSON.parse(text)
-        if (block.tag) {
-          const newBlock = addCopyBlockAfter(index, block)
-          nextTick(() => {
-            const el = document.getElementById(newBlock.id)
-            if (el) {
-              el.focus()
-            }
-          })
-        }
-      } catch (err) {
-        console.error('want to paste simple text:', text)
-      }
+  /*
+  two scenarios
+  - in the clipboard there is a block, paste this block as new after the current one
+    but do not the default text-paste
+  - the normal text-paste, that is done by default behavior.
+*/
+  function pasteFromToClipboard(index, event) {
+    const block = clipboardGetBlock()
+    if (block) {
+      event.preventDefault()
+      const newBlock = addCopyBlockAfter(index, block)
+      focusBlock(newBlock.id)
     }
   }
 
@@ -223,6 +228,8 @@
           @arrowUp="setFocusOn(index - 1)"
           @arrowDown="setFocusOn(index + 1)"
           @deleteBlock="deleteAndFocusPreviousBlock(element.id, index)"
+          @copy="copyToClipboard(index)"
+          @paste="(event) => pasteFromToClipboard(index, event)"
         />
         <EditableBlock
           v-else
@@ -239,7 +246,7 @@
           @enterPressed="addAndFocusOnBlock(index)"
           @deleteBlock="deleteAndFocusPreviousBlock(element.id, index)"
           @copy="copyToClipboard(index)"
-          @paste="pasteFromToClipboard(index)"
+          @paste="(event) => pasteFromToClipboard(index, event)"
         />
       </div>
     </template>

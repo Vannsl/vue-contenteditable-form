@@ -1,14 +1,36 @@
-export async function addBlockToClipboard(block) {
+/*
+  local clipboard.
+
+  advantages (in contrast to the 'real' clipboard)
+  - no special browser permission necessary on getting the clipboard content
+  - synchronous function
+*/
+
+let clipboardValue = null
+
+export function clipboardSetBlock(block) {
   const copyBlock = { ...block, id: undefined }
   const blockJson = JSON.stringify(copyBlock)
-  await navigator.clipboard.writeText(blockJson)
+  clipboardValue = blockJson
 }
 
-export async function getClipboardText() {
+export function clipboardClear() {
+  clipboardValue = null
+}
+
+export function clipboardGetBlock() {
   try {
-    const text = await navigator.clipboard.readText()
-    return text
+    const text = clipboardGetText()
+    if (text) {
+      const block = JSON.parse(text)
+      return block
+    }
+    return null
   } catch (err) {
     return null
   }
+}
+
+export function clipboardGetText() {
+  return clipboardValue
 }

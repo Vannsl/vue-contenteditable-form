@@ -23,7 +23,6 @@
   import TextToolbar from './TextToolbar.vue'
   import { useBlocks } from '../composables/useBlocks.js'
   import { KEYS, CODES } from '../utils/keys'
-  import { isSelectionEmpty } from '../utils/selection'
 
   const { updateTag } = useBlocks()
 
@@ -93,12 +92,9 @@
         emit('delete-block')
       }
     } else if (event[KEYS.CTRL_OR_CMD] && event.code === CODES.C) {
-      if (isSelectionEmpty()) {
-        emit('copy')
-      }
+      emit('copy')
     } else if (event[KEYS.CTRL_OR_CMD] && event.code === CODES.V) {
-      event.preventDefault()
-      emit('paste')
+      emit('paste', event)
     }
   }
 
