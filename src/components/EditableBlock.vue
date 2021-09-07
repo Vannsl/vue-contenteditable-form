@@ -22,6 +22,7 @@
   import contenteditable from 'vue-contenteditable'
   import TextToolbar from './TextToolbar.vue'
   import { useBlocks } from '../composables/useBlocks.js'
+  import { KEYS, CODES } from '../utils/keys'
 
   const { updateTag } = useBlocks()
 
@@ -58,6 +59,8 @@
     'delete-block',
     'arrow-up',
     'arrow-down',
+    'copy',
+    'paste',
   ])
 
   const html = toRef(props, 'html')
@@ -88,6 +91,10 @@
         event.preventDefault()
         emit('delete-block')
       }
+    } else if (event[KEYS.CTRL_OR_CMD] && event.code === CODES.C) {
+      emit('copy')
+    } else if (event[KEYS.CTRL_OR_CMD] && event.code === CODES.V) {
+      emit('paste', event)
     }
   }
 

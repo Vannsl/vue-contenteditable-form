@@ -8,6 +8,12 @@
   import EditableBlock from './EditableBlock.vue'
   import ImageBlock from './ImageBlock.vue'
   import { useBlocks } from '../composables/useBlocks.js'
+  import {
+    clipboardGetBlock,
+    clipboardClear,
+    clipboardSetBlock,
+  } from '../utils/clipboard'
+  import { selectionIsEmpty } from '../utils/selection'
 
   const drag = ref(false)
 
@@ -23,6 +29,7 @@
     updateBlock,
     updateTitle,
     addBlockAfter,
+    addCopyBlockAfter,
     addImageBlockAfter,
     deleteBlock,
   } = useBlocks()
@@ -76,6 +83,33 @@
       reader.readAsDataURL(file)
     }
     input.click()
+  }
+
+  function copyToClipboard(index) {
+    if (selectionIsEmpty()) {
+      const block = blocks.value[index]
+      if (block) {
+        clipboardSetBlock(block)
+      }
+    } else {
+      // no block in clipboard
+      clipboardClear()
+    }
+  }
+
+  /*
+  two scenarios
+  - in the clipboard there is a block, paste this block as new after the current one
+    but do not the default text-paste
+  - the normal text-paste, that is done by default behavior.
+*/
+  function pasteFromToClipboard(index, event) {
+    const block = clipboardGetBlock()
+    if (block) {
+      event.preventDefault()
+      const newBlock = addCopyBlockAfter(index, block)
+      focusBlock(newBlock.id)
+    }
   }
 
   function setFocusOn(index) {
@@ -194,6 +228,8 @@
           @arrowUp="setFocusOn(index - 1)"
           @arrowDown="setFocusOn(index + 1)"
           @deleteBlock="deleteAndFocusPreviousBlock(element.id, index)"
+          @copy="copyToClipboard(index)"
+          @paste="(event) => pasteFromToClipboard(index, event)"
         />
         <EditableBlock
           v-else
@@ -209,6 +245,8 @@
           @changeContent="(html) => updateBlock(element.id, html)"
           @enterPressed="addAndFocusOnBlock(index)"
           @deleteBlock="deleteAndFocusPreviousBlock(element.id, index)"
+          @copy="copyToClipboard(index)"
+          @paste="(event) => pasteFromToClipboard(index, event)"
         />
       </div>
     </template>
