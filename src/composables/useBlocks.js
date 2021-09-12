@@ -25,6 +25,14 @@ if (localStorageHas(TITLE)) {
 }
 
 export function useBlocks() {
+  function isBlockEmpty(block) {
+    if (block.tag === 'img') {
+      return !block.image
+    } else {
+      return !block.html
+    }
+  }
+
   function updateBlock(id, html) {
     const block = blocks.value.find((block) => block.id === id)
     block.html = html
@@ -55,6 +63,11 @@ export function useBlocks() {
     return newBlock
   }
 
+  function exchangeCopyBlock(index, block) {
+    const newBlock = { ...block, id: blocks.value[index].id }
+    blocks.value[index] = newBlock
+    return newBlock
+  }
   function addImageBlockAfter(index, content, text) {
     const newBlock = { id: v4(), content: content, text, tag: 'img' }
     blocks.value.splice(index + 1, 0, newBlock)
@@ -96,9 +109,11 @@ export function useBlocks() {
   return {
     blocks,
     title: readonly(title),
+    isBlockEmpty,
     deleteBlock,
     addBlockAfter,
     addCopyBlockAfter,
+    exchangeCopyBlock,
     addImageBlockAfter,
     updateTag,
     updateTitle,
