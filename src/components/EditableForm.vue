@@ -30,8 +30,10 @@
     updateTitle,
     addBlockAfter,
     addCopyBlockAfter,
+    exchangeCopyBlock,
     addImageBlockAfter,
     deleteBlock,
+    isBlockEmpty,
   } = useBlocks()
 
   /*
@@ -107,7 +109,13 @@
     const block = clipboardGetBlock()
     if (block) {
       event.preventDefault()
-      const newBlock = addCopyBlockAfter(index, block)
+      const currentBlock = getBlockByIndex(index)
+      let newBlock
+      if (isBlockEmpty(currentBlock)) {
+        newBlock = exchangeCopyBlock(index, block)
+      } else {
+        newBlock = addCopyBlockAfter(index, block)
+      }
       focusBlock(newBlock.id)
     }
   }
